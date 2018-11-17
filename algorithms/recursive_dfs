@@ -1,5 +1,4 @@
-/* Check nodes reachability - recursive DFS in directed acyclyc graph */
-
+/* Check nodes reachability - recursive DFS in directed weighted acyclyc graph */
 connect(node1, node2, 100).
 connect(node1, node5, 130).
 connect(node3, node4, 123).
@@ -8,3 +7,7 @@ connect(node2, node3, 110).
 
 connection(A, A).
 connection(A, B):-connect(A, B1, _), connection(B1, B).
+
+/* Calculate cost between nodes - recursive DFS in directed weighted acyclyc graph */
+connection_with_cost(A, A, 0).
+connection_with_cost(A, B, C):-connect(A, B1, C2), connection_with_cost(B1, B, C1), C is C1 + C2.
