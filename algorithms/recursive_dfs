@@ -1,0 +1,10 @@
+/* Check nodes reachability - recursive DFS in directed acyclyc graph */
+
+connect(node1, node2, 100).
+connect(node1, node5, 130).
+connect(node3, node4, 123).
+connect(node5, node6, 130).
+connect(node2, node3, 110).
+
+connection(A, A).
+connection(A, B):-connect(A, B1, _), connection(B1, B).
