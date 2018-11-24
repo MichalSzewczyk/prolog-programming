@@ -1,0 +1,3 @@
+f(_, 0, 0).
+f(N, N, 1).
+f(N, K, W):- N1 is N - 1, K1 is K - 1, f(N1, K, W1), W2 is K * W1, f(N1, K1, W3), W is W2 + W3.
