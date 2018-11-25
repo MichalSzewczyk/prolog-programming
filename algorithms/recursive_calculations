@@ -24,3 +24,10 @@ W = 25
 
 Test case passed.
 */
+
+/*
+Function: g(n) = n · f(n,0) + (n-1) · f(n, 1) + ... + 1 · f(n, n-1) + 0 · f(n, n).
+*/
+g(N, W):- g(N, 0, W).
+g(N, N, 0).
+g(N, I, W):- W1 is N - I, f(N, I, W2), I1 is I + 1, g(N, I1, W3), W is W1 * W2 + W3.
