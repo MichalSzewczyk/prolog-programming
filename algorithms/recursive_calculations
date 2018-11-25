@@ -25,9 +25,57 @@ W = 25
 Test case passed.
 */
 
+/* Function: f(n, k) = k · f(n-1, k) + f(n-1, k-1), f(n, n) = 1, f(n, 0) = 0 for n > 0 */
+f(N, 0, W):- N > 0, W is 0.
+f(N, N, 1).
+f(N, K, W):- K >= 0, N >= K, N1 is N - 1, K1 is K - 1, f(N1, K, W1), W2 is K * W1, f(N1, K1, W3), W is W2 + W3.
+
+/* Example test case: 
+Calculated manually:
+f(5, 3) = 3 * f(4, 3) + f(4, 2) = 3 * 6 + 7 = 25
+f(4, 3) = 3 * f(3, 3) + f(3, 2) = 3 + 3 = 6
+f(3, 3) = 1
+f(3, 2) = 2*f(2, 2) + f(2, 1) = 2 + 1 = 3
+f(2, 2) = 1
+f(2, 1) = 1*f(1, 1) + f(1, 0) = 1 + 0 = 1
+f(1, 1) = 1
+f(1, 0) = 0
+f(4, 2) = 2 * f(3, 2) + f(3, 1) = 2 * 3 + 1 = 7
+f(3, 1) = 1 * f(2, 1) + f(2, 0) = 1 + 0 = 1
+f(2, 1) = 1
+f(2, 0) = 0
+
+Calculated using predicate:
+f(5, 3)?
+W = 25
+
+Test case passed.
+*/
+
 /*
-Function: g(n) = n · f(n,0) + (n-1) · f(n, 1) + ... + 1 · f(n, n-1) + 0 · f(n, n).
+Functions: 
+g(n) = n · f(n,0) + (n-1) · f(n, 1) + ... + 1 · f(n, n-1) + 0 · f(n, n).
+f(n, k) = k · f(n-1, k) + f(n-1, k-1), f(n, n) = 1, f(n, 0) = 0 for n > 0
 */
 g(N, W):- g(N, 0, W).
 g(N, N, 0).
 g(N, I, W):- W1 is N - I, f(N, I, W2), I1 is I + 1, g(N, I1, W3), W is W1 * W2 + W3.
+
+/* Example test case: 
+Calculated manually:
+g(4) = 4 * f(4, 0) + 3 * f(4, 1) + 2 * f(4, 2) + 1 * f(4, 3) + 0 * f(4, 4) = 
+4 * 0 + 3 * 1 + 2 * 7 + 1 * 6 + 0 * 1 = 23
+f(4, 0) = 0
+f(4, 1) = 1 * f(3, 1) + f(3, 0) = 1 * 1 + 0
+f(3, 1) = 1 * f(2, 1) + f(2, 0) = 1 + 0 = 1
+f(3, 0) = 0
+f(4, 2) = 2 * f(3, 2) + f(3, 1) = 2 * 3 + 1 = 7
+f(4, 3) = 3 * f(3, 3) + f(3, 2) = 3 + 3 = 6
+f(4, 4) = 1
+
+Calculated using predicate:
+g(4, W)?
+W = 23
+
+Test case passed.
+*/
