@@ -1,0 +1,15 @@
+emptyBoard([['.','.','.','.','.','.','.','.'],
+['.','.','.','.','.','.','.','.'],
+['.','.','.','.','.','.','.','.'],
+['.','.','.','.','.','.','.','.'],
+['.','.','.','.','.','.','.','.'],
+['.','.','.','.','.','.','.','.'],
+['.','.','.','.','.','.','.','.'],
+['.','.','.','.','.','.','.','.']]).
+
+/* Function responsible for printing the whole board. */
+printBoard([]).
+printBoard([E|L]):- printRow(E, ""), printBoard(L).
+/* Function responsible for printing of the single row. */
+printRow([E|L], ACC):- string_concat(E, ACC, R1), printRow(L, R1).
+printRow([], ACC):- writeln(ACC).
