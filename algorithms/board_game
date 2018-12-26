@@ -10,14 +10,19 @@ emptyBoard([['.','.','.','.','.','.','.','.'],
 /* Function responsible for printing the whole board. */
 printBoard([]).
 printBoard([E|L]):- printRow(E, ""), printBoard(L).
+
 /* Function responsible for printing of the single row. */
 printRow([E|L], ACC):- string_concat(ACC, E, R1), printRow(L, R1).
 printRow([], ACC):- writeln(ACC).
 
-
-putPiecesOnBoard(B1, [piece(X, Y, V)|Pieces], B3):-replaceElementAtIndex(B1, Y, X, V, B2), putPiecesOnBoard(B2, Pieces, B3).
+/* Function responsible for adding pieces into board */
+putPiecesOnBoard(B1, [piece(X, Y, V)|Pieces], B3):-replaceElementInMatrix(B1, Y, X, V, B2), putPiecesOnBoard(B2, Pieces, B3).
 putPiecesOnBoard(B, [], B).
-replaceElementAtIndex([R|ROWS], X, Y, V, [R|RROWS]):-Y1 is Y-1, replaceElementAtIndex(ROWS, X, Y1, V, RROWS).
-replaceElementAtIndex([R|ROWS], X, 0, V, [R2|ROWS]):-replaceElement(R, X, V, R2).
-replaceElement([C|COLS], X, V, [C|RCOLS]):-X1 is X-1, replaceElement(COLS, X1, V, RCOLS).
-replaceElement([_|COLS], 0, V, [V|COLS]).
+
+/* Function responsible for replacing single element at given position on board */
+replaceElementInMatrix([ROW|ROWS], X, Y, V, [ROW|RESULT_ROWS]):-Y1 is Y-1, replaceElementInMatrix(ROWS, X, Y1, V, RESULT_ROWS).
+replaceElementInMatrix([ROW|ROWS], X, 0, V, [RESULT_ROW|ROWS]):-replaceElementInRow(ROW, X, V, RESULT_ROW).
+
+/* Function responsible for replacing single element at given position on row */
+replaceElementInRow([ELEMENT|ROW], X, V, [ELEMENT|RESULT_ROW]):-X1 is X-1, replaceElementInRow(ROW, X1, V, RESULT_ROW).
+replaceElementInRow([_|ROW], 0, V, [V|ROW]).
