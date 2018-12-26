@@ -17,4 +17,7 @@ printRow([], ACC):- writeln(ACC).
 
 putPiecesOnBoard(B1, [piece(X, Y, V)|Pieces], B2):-B2 = B1, replaceElementAtIndex(B1, X, Y, V, B2), putPiecesOnBoard(B1, Pieces, B2).
 putPiecesOnBoard(B1, [], B1).
-replaceElementAtIndex(B1, X, Y, V, B2):- print(X).
+replaceElementAtIndex([R|ROWS], X, Y, V, [R|ROWS]):-Y1 is Y-1, replaceElementAtIndex(ROWS, X, Y1, V, ROWS).
+replaceElementAtIndex([R|ROWS], X, 0, V, [R2|ROWS]):-replaceElementAtIndex(R, X, V, R2).
+replaceElementAtIndex([C|COLS], X, V, [C|COLS]):-X1 is X-1, replaceElementAtIndex(COLS, X1, V, COLS).
+replaceElementAtIndex([_|COLS], 0, V, [V|COLS]).
