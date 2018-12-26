@@ -11,11 +11,11 @@ emptyBoard([['.','.','.','.','.','.','.','.'],
 printBoard([]).
 printBoard([E|L]):- printRow(E, ""), printBoard(L).
 /* Function responsible for printing of the single row. */
-printRow([E|L], ACC):- string_concat(E, ACC, R1), printRow(L, R1).
+printRow([E|L], ACC):- string_concat(ACC, E, R1), printRow(L, R1).
 printRow([], ACC):- writeln(ACC).
 
 
-putPiecesOnBoard(B1, [piece(X, Y, V)|Pieces], B3):-replaceElementAtIndex(B1, X, Y, V, B2), putPiecesOnBoard(B2, Pieces, B3).
+putPiecesOnBoard(B1, [piece(X, Y, V)|Pieces], B3):-replaceElementAtIndex(B1, Y, X, V, B2), putPiecesOnBoard(B2, Pieces, B3).
 putPiecesOnBoard(B, [], B).
 replaceElementAtIndex([R|ROWS], X, Y, V, [R|RROWS]):-Y1 is Y-1, replaceElementAtIndex(ROWS, X, Y1, V, RROWS).
 replaceElementAtIndex([R|ROWS], X, 0, V, [R2|ROWS]):-replaceElement(R, X, V, R2).
