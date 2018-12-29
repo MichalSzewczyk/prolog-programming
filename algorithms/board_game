@@ -27,11 +27,14 @@ replaceElementInMatrix([ROW|ROWS], X, 0, V, [RESULT_ROW|ROWS]):-replaceElementIn
 replaceElementInRow([ELEMENT|ROW], X, V, [ELEMENT|RESULT_ROW]):-X1 is X-1, replaceElementInRow(ROW, X1, V, RESULT_ROW).
 replaceElementInRow([_|ROW], 0, V, [V|ROW]).
 
-isSafe(B, X, Y):-isHorizonallySafe(B, X, Y), isVerticallySafe(B, X, Y).
-    /* isTopDownSafe(B, X, Y), isBottomUpSafe(B, X, Y).*/
+isSafe(B, X, Y):-isHorizonallySafe(B, X, Y), isVerticallySafe(B, X, Y), isTopDownSafe(B, X, Y).
+    /*, isBottomUpSafe(B, X, Y).*/
 
 isHorizonallySafe(B, X, Y):- isHorizonallySafe(B, 0, X, Y).
 isHorizonallySafe(B, IDX, X, Y):- IDX == 8; IDX < 8, ((IDX \= X, nth0(Y, B, ROW), nth0(IDX, ROW, ELEM), ELEM == '.'; IDX == X), IDX1 is IDX + 1, isHorizonallySafe(B, IDX1, X, Y)).
 
 isVerticallySafe(B, X, Y):- isVerticallySafe(B, 0, X, Y).
 isVerticallySafe(B, IDX, X, Y):- IDX == 8; IDX < 8, ((IDX \= Y, nth0(IDX, B, ROW), nth0(X, ROW, ELEM), ELEM == '.'; IDX == Y), IDX1 is IDX + 1, isVerticallySafe(B, IDX1, X, Y)).
+
+isTopDownSafe(B, X, Y):- X > Y, IDX_X is X - Y, isTopDownSafe(B, IDX_X, 0, X, Y) ; X =< Y, IDX_Y is Y - X, isTopDownSafe(B, 0, IDX_Y, X, Y) .
+isTopDownSafe(B, IDX_X, IDX_Y, X, Y):- IDX_X == 8 ; IDX_Y == 8; IDX_X < 8, IDX_Y < 8, ((IDX_X \= X, IDX_Y \= Y, nth0(IDX_Y, B, ROW), nth0(IDX_X, ROW, ELEM), ELEM == '.'; IDX_Y == Y, IDX_X == X), IDX1_X is IDX_X + 1, IDX1_Y is IDX_Y + 1, isTopDownSafe(B, IDX1_X, IDX1_Y, X, Y)).
