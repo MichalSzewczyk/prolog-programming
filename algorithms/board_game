@@ -26,3 +26,13 @@ replaceElementInMatrix([ROW|ROWS], X, 0, V, [RESULT_ROW|ROWS]):-replaceElementIn
 /* Function responsible for replacing single element at given position on row */
 replaceElementInRow([ELEMENT|ROW], X, V, [ELEMENT|RESULT_ROW]):-X1 is X-1, replaceElementInRow(ROW, X1, V, RESULT_ROW).
 replaceElementInRow([_|ROW], 0, V, [V|ROW]).
+
+isSafe(B, X, Y):-isVerticallySafe(B, X, Y).
+    /*isHorizonallySafe(B, Y), isTopDownSafe(B, X, Y), isBottomUpSafe(B, X, Y).*/
+
+isVerticallySafe(B, X, Y):- isVerticallySafe(B, 0, X, Y).
+isVerticallySafe(B, IDX, X, Y):- nth0(Y, B, ROW), nth0(IDX, ROW, ELEM), ELEM == '.', print('here'), IDX1 is IDX + 1, print(IDX1), print(X), isVerticallySafe(B, IDX1, X, Y).
+isVerticallySafe(B, X, X, Y):-print(' not here'), print(X), IDX1 is X + 1, isVerticallySafe(B, IDX1, X, Y).
+isVerticallySafe(_, 9, _, _).
+
+
