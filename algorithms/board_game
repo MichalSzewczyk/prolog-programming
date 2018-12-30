@@ -41,32 +41,31 @@ isTopDownSafe(B, IDX_X, IDX_Y, X, Y):- IDX_X == 8 ; IDX_Y == 8; IDX_X < 8, IDX_Y
 isBottomUpSafe(B, X, Y):- X > Y, IDX_Y is 7 - X + Y, isBottomUpSafe(B, 7, IDX_Y, X, Y) ; X =< Y, IDX_X is 7 - Y + X, isBottomUpSafe(B, IDX_X, 7, X, Y) .
 isBottomUpSafe(B, IDX_X, IDX_Y, X, Y):- IDX_X == 0 ; IDX_Y == 0; IDX_X >= 0, IDX_Y >= 0, ((IDX_X \= X, IDX_Y \= Y, nth0(IDX_Y, B, ROW), nth0(IDX_X, ROW, ELEM), ELEM == '.'; (IDX_Y == Y, IDX_X == X)), IDX1_X is IDX_X - 1, IDX1_Y is IDX_Y - 1, isBottomUpSafe(B, IDX1_X, IDX1_Y, X, Y)).
 
-move(B1, [FromI,FromJ], [ToI, ToJ], B2 ):- isAllowed([FromI,FromJ], [ToI, ToJ]), doMove(B1, [FromI,FromJ], [ToI, ToJ], B2) ; B2 is B1.
-isAllowed([FromI,FromJ], [ToI, ToJ]):- FromI=ToI;FromJ=ToJ;FromJ-FromI=ToJ-ToI;FromI+FromJ=ToI+ToJ.
-doMove(B1, [FromI,FromJ], [ToI, ToJ], B2):- 
-FromI=ToI, FromJ>=ToJ, moveToDown(B1, FromI, FromJ, ToI, ToJ, B2);
-     FromI=ToI, FromJ<ToJ, moveToUp(B1, FromI,FromJ, ToI, ToJ, B2);
-    FromJ=ToJ, FromI<ToI, moveToRight(B1, FromI,FromJ, ToI, ToJ, B2);
-    FromJ=ToJ, FromI>=ToI, moveToLeft(B1, FromI,FromJ, ToI, ToJ, B2);
-    FromJ-FromI=ToJ-ToI, FromJ<ToJ, moveTopDownForward(B1, FromI,FromJ, ToI, ToJ, B2), 
-	FromJ-FromI=ToJ-ToI, FromJ>=ToJ, moveTopDownBackward(B1, FromI,FromJ, ToI, ToJ, B2), 
-    FromI+FromJ=ToI+ToJ, FromJ<ToJ, moveBottomUpForward(B1, [FromI,FromJ], [ToI, ToJ], B2).
+move(B1, [FromI,FromJ], [ToI, ToJ], B2 ):- isAllowed(FromI,FromJ, ToI, ToJ), print('isAllowed called'), nth0(FromJ, B1, ROW), nth0(FromI, ROW, ELEM), doMove(B1, ELEM, [FromI,FromJ], [ToI, ToJ], B2) ; B2 is B1.
+isAllowed(FromI,FromJ, ToI, ToJ):- FromI==ToI;FromJ=ToJ;FromJ-FromI=ToJ-ToI;FromI+FromJ=ToI+ToJ.
+doMove(B1, ELEM, [FromI,FromJ], [ToI, ToJ], B2):- print(FromI + FromJ + ToI + ToJ),
+FromI=ToI, FromJ>=ToJ, moveToDown(B1, ELEM, FromI, FromJ, ToI, ToJ, B2);
+     FromI=ToI, FromJ<ToJ, moveToUp(B1, ELEM, FromI,FromJ, ToI, ToJ, B2);
+    FromJ=ToJ, FromI<ToI, moveToRight(B1, ELEM, FromI,FromJ, ToI, ToJ, B2);
+    FromJ=ToJ, FromI>=ToI, moveToLeft(B1, ELEM, FromI,FromJ, ToI, ToJ, B2);
+    FromJ-FromI=ToJ-ToI, FromJ<ToJ, moveTopDownForward(B1, ELEM, FromI,FromJ, ToI, ToJ, B2), 
+	FromJ-FromI=ToJ-ToI, FromJ>=ToJ, moveTopDownBackward(B1, ELEM, FromI,FromJ, ToI, ToJ, B2), 
+    FromI+FromJ=ToI+ToJ, FromJ<ToJ, moveBottomUpForward(B1, ELEM, FromI,FromJ, ToI, ToJ, B2), 
+    FromI+FromJ=ToI+ToJ, FromJ>=ToJ, moveBottomUpBackward(B1, ELEM, FromI,FromJ, ToI, ToJ, B2).
 	
-moveToDown(B1, CUR_I, CUR_J, ToI, ToJ, B2):-replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_J is CUR_J - 1, moveToDown(RESULT_B, CUR_I, NEXT_J, ToI, ToJ, B2).
-moveToDown(B1, I, J, I, J, B1).
-moveToDown(B1, CUR_I, CUR_J, ToI, ToJ, B2):-replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_J is CUR_J - 1, moveToDown(RESULT_B, CUR_I, NEXT_J, ToI, ToJ, B2).
-moveToDown(B1, I, J, I, J, B1).
-moveToUp(B1, CUR_I, CUR_J, ToI, ToJ, B2):-replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_J is CUR_J + 1, moveToUp(RESULT_B, CUR_I, NEXT_J, ToI, ToJ, B2).
-moveToUp(B1, I, J, I, J, B1).
-moveToRight(B1, CUR_I, CUR_J, ToI, ToJ, B2):-replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_I is CUR_I + 1, moveToRight(RESULT_B, NEXT_I, CUR_J, ToI, ToJ, B2).
-moveToRight(B1, I, J, I, J, B1).
-moveToLeft(B1, CUR_I, CUR_J, ToI, ToJ, B2):-replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_I is CUR_I - 1, moveToLeft(RESULT_B, NEXT_I, CUR_J, ToI, ToJ, B2).
-moveToLeft(B1, I, J, I, J, B1).
-moveTopDownFroward(B1, CUR_I, CUR_J, ToI, ToJ, B2):-replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_I is CUR_I - 1, NEXT_J is CUR_J - 1, moveTopDownFroward(RESULT_B, NEXT_I, NEXT_J, ToI, ToJ, B2).
-moveTopDownFroward(B1, I, J, I, J, B1).
-moveTopDownBackward(B1, CUR_I, CUR_J, ToI, ToJ, B2):-replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_I is CUR_I - 1, NEXT_J is CUR_J - 1, moveTopDownBackward(RESULT_B, NEXT_I, NEXT_J, ToI, ToJ, B2).
-moveTopDownBackward(B1, I, J, I, J, B1).
-moveBottomUpFroward(B1, CUR_I, CUR_J, ToI, ToJ, B2):-replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_I is CUR_I + 1, NEXT_J is CUR_J - 1, moveBottomUpFroward(RESULT_B, NEXT_I, NEXT_J, ToI, ToJ, B2).
-moveBottomUpFroward(B1, I, J, I, J, B1).
-moveBottomUpBackward(B1, CUR_I, CUR_J, ToI, ToJ, B2):-replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_I is CUR_I - 1, NEXT_J is CUR_J + 1, moveBottomUpBackward(RESULT_B, NEXT_I, NEXT_J, ToI, ToJ, B2).
-moveBottomUpBackward(B1, I, J, I, J, B1).
+moveToDown(B1, ELEM, CUR_I, CUR_J, ToI, ToJ, B2):-print('moveToDown'), replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_J is CUR_J - 1, moveToDown(RESULT_B, ELEM, CUR_I, NEXT_J, ToI, ToJ, B2).
+moveToDown(B1, ELEM, I, J, I, J, RESULT_B):-replaceElementInMatrix(B1, I, J, ELEM, RESULT_B).
+moveToUp(B1, ELEM, CUR_I, CUR_J, ToI, ToJ, B2):-print('moveToUp'), replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_J is CUR_J + 1, moveToUp(RESULT_B, ELEM, CUR_I, NEXT_J, ToI, ToJ, B2).
+moveToUp(B1, ELEM, I, J, I, J, RESULT_B):-replaceElementInMatrix(B1, I, J, ELEM, RESULT_B).
+moveToRight(B1, ELEM, CUR_I, CUR_J, ToI, ToJ, B2):-print('moveToRight'), replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_I is CUR_I + 1, moveToRight(RESULT_B, ELEM, NEXT_I, CUR_J, ToI, ToJ, B2).
+moveToRight(B1, ELEM, I, J, I, J, RESULT_B):-replaceElementInMatrix(B1, I, J, ELEM, RESULT_B).
+moveToLeft(B1, ELEM, CUR_I, CUR_J, ToI, ToJ, B2):-print('moveToLeft'), replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_I is CUR_I - 1, moveToLeft(RESULT_B, ELEM, NEXT_I, CUR_J, ToI, ToJ, B2).
+moveToLeft(B1, ELEM, I, J, I, J, RESULT_B):-replaceElementInMatrix(B1, I, J, ELEM, RESULT_B).
+moveTopDownForward(B1, ELEM, CUR_I, CUR_J, ToI, ToJ, B2):-print('moveTopDownForward'), replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_I is CUR_I - 1, NEXT_J is CUR_J - 1, moveTopDownForward(RESULT_B, ELEM, NEXT_I, NEXT_J, ToI, ToJ, B2).
+moveTopDownForward(B1, ELEM, I, J, I, J, RESULT_B):-replaceElementInMatrix(B1, I, J, ELEM, RESULT_B).
+moveTopDownBackward(B1, ELEM, CUR_I, CUR_J, ToI, ToJ, B2):-print('moveTopDownBackward'), replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_I is CUR_I - 1, NEXT_J is CUR_J - 1, moveTopDownBackward(RESULT_B, ELEM, NEXT_I, NEXT_J, ToI, ToJ, B2).
+moveTopDownBackward(B1, ELEM, I, J, I, J, RESULT_B):-replaceElementInMatrix(B1, I, J, ELEM, RESULT_B).
+moveBottomUpForward(B1, ELEM, CUR_I, CUR_J, ToI, ToJ, B2):-print('Bottom-up forward'), replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_I is CUR_I + 1, NEXT_J is CUR_J - 1, moveBottomUpForward(RESULT_B, ELEM, NEXT_I, NEXT_J, ToI, ToJ, B2).
+moveBottomUpForward(B1, ELEM, I, J, I, J, RESULT_B):-replaceElementInMatrix(B1, I, J, ELEM, RESULT_B).
+moveBottomUpBackward(B1, ELEM, CUR_I, CUR_J, ToI, ToJ, B2):-print('Bottom-up backward'), replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_I is CUR_I - 1, NEXT_J is CUR_J + 1, moveBottomUpBackward(RESULT_B, ELEM, NEXT_I, NEXT_J, ToI, ToJ, B2).
+moveBottomUpBackward(B1, ELEM, I, J, I, J, RESULT_B):-replaceElementInMatrix(B1, I, J, ELEM, RESULT_B).
