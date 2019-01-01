@@ -70,25 +70,8 @@ moveBottomUpForward(B1, ELEM, I, J, I, J, RESULT_B):-replaceElementInMatrix(B1, 
 moveBottomUpBackward(B1, ELEM, CUR_I, CUR_J, ToI, ToJ, B2):-canMove(B1, CUR_I, CUR_J, ELEM), replaceElementInMatrix(B1, CUR_I, CUR_J, '.', RESULT_B), NEXT_I is CUR_I + 1, NEXT_J is CUR_J - 1, moveBottomUpBackward(RESULT_B, ELEM, NEXT_I, NEXT_J, ToI, ToJ, B2).
 moveBottomUpBackward(B1, ELEM, I, J, I, J, RESULT_B):-replaceElementInMatrix(B1, I, J, ELEM, RESULT_B).
 canMove(B, CUR_I, CUR_J, ELEM):-nth0(CUR_J, B, ROW), nth0(CUR_I, ROW, ELEM1), (ELEM1 == '.'; ELEM1 == ELEM).
-/* Test with all possible moves 
- * Initial board:
- * 
- * 
-emptyBoard(B), printBoard(B),
-putPiecesOnBoard(B, [
-piece(3, 3, 'A'),
-piece(1, 3, 'B'),
-piece(5, 3, 'C'), 
-piece(6, 6, 'D'),
-piece(6, 2, 'E'),
-piece(2, 5, 'F'),
-piece(7, 0, 'G'),
-piece(4, 4, 'H'),
-piece(0, 0, 'H')
-], B2),
-printBoard(B2).
 
-Test case:
+Test case with all possible moves:
 emptyBoard(B), printBoard(B),
 putPiecesOnBoard(B, [
 piece(3, 3, 'A'),
